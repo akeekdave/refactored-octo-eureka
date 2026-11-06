@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Companies | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Companies</h1>
+            <p>Create, update, and remove company records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Company records</h2>
+            <h:form>
+                <h:dataTable value="#{companyController.items}" var="company"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{company.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{company.name}</h:column>
+                    <h:column><f:facet name="header">Tax number</f:facet>#{company.taxNumber}</h:column>
+                    <h:column><f:facet name="header">Address</f:facet>#{company.address}</h:column>
+                    <h:column><f:facet name="header">Phone</f:facet>#{company.phone}</h:column>
+                    <h:column><f:facet name="header">Email</f:facet>#{company.email}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{companyController.select(company)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{companyController.delete(company)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this company?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{companyController.editing ? 'Update company' : 'Add company'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{companyController.selected.name}" required="true"/>
+                    <h:outputLabel for="taxNumber" value="Tax number"/>
+                    <h:inputText id="taxNumber" value="#{companyController.selected.taxNumber}"/>
+                    <h:outputLabel for="address" value="Address"/>
+                    <h:inputText id="address" value="#{companyController.selected.address}"/>
+                    <h:outputLabel for="phone" value="Phone"/>
+                    <h:inputText id="phone" value="#{companyController.selected.phone}"/>
+                    <h:outputLabel for="email" value="Email"/>
+                    <h:inputText id="email" value="#{companyController.selected.email}"/>
+                </h:panelGrid>
+                <h:commandButton value="#{companyController.editing ? 'Update company' : 'Save company'}"
+                                 action="#{companyController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

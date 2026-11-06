@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Bills of Materials | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Bills of Materials</h1>
+            <p>Create, update, and remove bills of materials.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>BOM records</h2>
+            <h:form>
+                <h:dataTable value="#{billOfMaterialsController.items}" var="bom"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{bom.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{bom.name}</h:column>
+                    <h:column><f:facet name="header">Version</f:facet>#{bom.version}</h:column>
+                    <h:column><f:facet name="header">Finished product ID</f:facet>#{bom.product.id}</h:column>
+                    <h:column><f:facet name="header">Active</f:facet>#{bom.active}</h:column>
+                    <h:column>
+                        <f:facet name="header">Components</f:facet>
+                        <ul>
+                            <ui:repeat value="#{bom.items}" var="bomItem">
+                                <li>#{bomItem.componentProduct.name}: #{bomItem.quantity}</li>
+                            </ui:repeat>
+                        </ul>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{billOfMaterialsController.select(bom)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{billOfMaterialsController.delete(bom)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this bill of materials and its items?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{billOfMaterialsController.editing ? 'Update BOM' : 'Add BOM'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{billOfMaterialsController.selected.name}"
+                                 required="true" maxlength="150"/>
+                    <h:outputLabel for="version" value="Version"/>
+                    <h:inputText id="version" value="#{billOfMaterialsController.selected.version}"
+                                 required="true" maxlength="20"/>
+                    <h:outputLabel for="active" value="Active"/>
+                    <h:selectBooleanCheckbox id="active"
+                                             value="#{billOfMaterialsController.selected.active}"/>
+                    <h:outputLabel for="product" value="Finished product"/>
+                    <h:selectOneMenu id="product"
+                                     value="#{billOfMaterialsController.selectedProductId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a product" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productController.items}" var="product"
+                                       itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{billOfMaterialsController.editing ? 'Update BOM' : 'Save BOM'}"
+                                 action="#{billOfMaterialsController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

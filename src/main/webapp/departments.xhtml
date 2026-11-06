@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Departments | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Departments</h1>
+            <p>Create, update, and remove branch departments.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Department records</h2>
+            <h:form>
+                <h:dataTable value="#{departmentController.items}" var="department"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{department.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{department.name}</h:column>
+                    <h:column><f:facet name="header">Branch</f:facet>#{department.branch.name}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{departmentController.select(department)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{departmentController.delete(department)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this department?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{departmentController.editing ? 'Update department' : 'Add department'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{departmentController.selected.name}" required="true"/>
+                    <h:outputLabel for="branch" value="Branch"/>
+                    <h:selectOneMenu id="branch" value="#{departmentController.selectedBranchId}" required="true">
+                        <f:selectItem itemLabel="Select a branch" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{departmentController.branches}" var="branch"
+                                       itemValue="#{branch.id}" itemLabel="#{branch.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{departmentController.editing ? 'Update department' : 'Save department'}"
+                                 action="#{departmentController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

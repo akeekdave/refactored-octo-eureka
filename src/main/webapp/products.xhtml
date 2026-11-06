@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Products | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Products</h1>
+            <p>Create, update, and remove product records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Product records</h2>
+            <h:form>
+                <h:dataTable value="#{productController.items}" var="product"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{product.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{product.name}</h:column>
+                    <h:column><f:facet name="header">SKU</f:facet>#{product.sku}</h:column>
+                    <h:column><f:facet name="header">Barcode</f:facet>#{product.barcode}</h:column>
+                    <h:column><f:facet name="header">Price</f:facet>#{product.price}</h:column>
+                    <h:column><f:facet name="header">Cost</f:facet>#{product.cost}</h:column>
+                    <h:column><f:facet name="header">Category</f:facet>#{product.category.name}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{productController.select(product)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{productController.delete(product)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this product?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{productController.editing ? 'Update product' : 'Add product'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{productController.selected.name}" required="true"/>
+                    <h:outputLabel for="sku" value="SKU"/>
+                    <h:inputText id="sku" value="#{productController.selected.sku}" required="true"/>
+                    <h:outputLabel for="barcode" value="Barcode"/>
+                    <h:inputText id="barcode" value="#{productController.selected.barcode}" required="true"/>
+                    <h:outputLabel for="price" value="Price"/>
+                    <h:inputText id="price" value="#{productController.selected.price}" required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                    <h:outputLabel for="cost" value="Cost"/>
+                    <h:inputText id="cost" value="#{productController.selected.cost}" required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                    <h:outputLabel for="category" value="Category"/>
+                    <h:selectOneMenu id="category" value="#{productController.selectedCategoryId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a category" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productCategoryController.items}" var="category"
+                                       itemValue="#{category.id}" itemLabel="#{category.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{productController.editing ? 'Update product' : 'Save product'}"
+                                 action="#{productController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

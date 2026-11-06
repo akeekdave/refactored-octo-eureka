@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Attendance | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Attendance</h1>
+            <p>Record and manage employee attendance.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Attendance records</h2>
+            <h:form>
+                <h:dataTable value="#{attendanceController.items}" var="attendance"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{attendance.id}</h:column>
+                    <h:column><f:facet name="header">Employee</f:facet>
+                        #{attendance.employee.firstName} #{attendance.employee.lastName}
+                    </h:column>
+                    <h:column><f:facet name="header">Work date</f:facet>#{attendance.workDate}</h:column>
+                    <h:column><f:facet name="header">Check in</f:facet>#{attendance.checkIn}</h:column>
+                    <h:column><f:facet name="header">Check out</f:facet>#{attendance.checkOut}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{attendanceController.select(attendance)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{attendanceController.delete(attendance)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this attendance record?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{attendanceController.editing ? 'Update attendance' : 'Add attendance'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="workDate" value="Work date"/>
+                    <h:inputText id="workDate" type="date"
+                                 value="#{attendanceController.selected.workDate}" required="true">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                    <h:outputLabel for="checkIn" value="Check in"/>
+                    <h:inputText id="checkIn" type="datetime-local"
+                                 value="#{attendanceController.selected.checkIn}" required="true">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+                    </h:inputText>
+                    <h:outputLabel for="checkOut" value="Check out"/>
+                    <h:inputText id="checkOut" type="datetime-local"
+                                 value="#{attendanceController.selected.checkOut}" required="true">
+                        <f:convertDateTime type="localDateTime" pattern="yyyy-MM-dd'T'HH:mm"/>
+                    </h:inputText>
+                    <h:outputLabel for="employee" value="Employee"/>
+                    <h:selectOneMenu id="employee" value="#{attendanceController.selectedEmployeeId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select an employee" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{employeeController.items}" var="employee"
+                                       itemValue="#{employee.id}"
+                                       itemLabel="#{employee.firstName} #{employee.lastName}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{attendanceController.editing ? 'Update attendance' : 'Save attendance'}"
+                                 action="#{attendanceController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

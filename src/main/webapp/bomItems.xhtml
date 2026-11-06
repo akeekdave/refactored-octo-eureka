@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>BOM Items | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>BOM Items</h1>
+            <p>Create, update, and remove BOM component records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>BOM item records</h2>
+            <h:form>
+                <h:dataTable value="#{bomItemController.items}" var="bomItem"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{bomItem.id}</h:column>
+                    <h:column><f:facet name="header">BOM ID</f:facet>#{bomItem.bom.id}</h:column>
+                    <h:column><f:facet name="header">Component product ID</f:facet>#{bomItem.componentProduct.id}</h:column>
+                    <h:column><f:facet name="header">Quantity</f:facet>#{bomItem.quantity}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{bomItemController.select(bomItem)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{bomItemController.delete(bomItem)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this BOM item?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{bomItemController.editing ? 'Update BOM item' : 'Add BOM item'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="quantity" value="Quantity"/>
+                    <h:inputText id="quantity" value="#{bomItemController.selected.quantity}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+                    <h:outputLabel for="bom" value="Bill of materials"/>
+                    <h:selectOneMenu id="bom" value="#{bomItemController.selectedBomId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a bill of materials" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{billOfMaterialsController.items}" var="bom"
+                                       itemValue="#{bom.id}" itemLabel="#{bom.name} (#{bom.version})"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="componentProduct" value="Component product"/>
+                    <h:selectOneMenu id="componentProduct"
+                                     value="#{bomItemController.selectedComponentProductId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a component product" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productController.items}" var="product"
+                                       itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{bomItemController.editing ? 'Update BOM item' : 'Save BOM item'}"
+                                 action="#{bomItemController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

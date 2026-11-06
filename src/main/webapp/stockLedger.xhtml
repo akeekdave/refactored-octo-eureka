@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Stock Ledger | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Stock Ledger Transactions</h1>
+            <p>Record and review inventory movements by product and warehouse.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Stock transactions</h2>
+            <h:form>
+                <h:dataTable value="#{stockLedgerController.items}" var="item"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column>
+                        <f:facet name="header">Product</f:facet>
+                        #{item.product.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Warehouse</f:facet>
+                        #{item.warehouse.name}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Transaction Type</f:facet>
+                        #{item.transactionType}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Reference ID</f:facet>
+                        #{item.referenceId}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Quantity</f:facet>
+                        #{item.quantity}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Transaction Date</f:facet>
+                        #{item.transactionDate}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Delete"
+                                         action="#{stockLedgerController.delete(item)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this stock transaction?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>Add stock transaction</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="transactionType" value="Transaction type"/>
+                    <h:selectOneMenu id="transactionType"
+                                     value="#{stockLedgerController.selected.transactionType}"
+                                     required="true">
+                        <f:selectItem itemLabel="Stock In" itemValue="STOCK_IN"/>
+                        <f:selectItem itemLabel="Stock Out" itemValue="STOCK_OUT"/>
+                        <f:selectItem itemLabel="Work Order Issue" itemValue="WORK_ORDER_ISSUE"/>
+                        <f:selectItem itemLabel="Adjustment" itemValue="ADJUSTMENT"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel for="referenceId" value="Reference ID (optional)"/>
+                    <h:inputText id="referenceId"
+                                 value="#{stockLedgerController.selected.referenceId}"/>
+
+                    <h:outputLabel for="quantity" value="Quantity"/>
+                    <h:inputText id="quantity"
+                                 value="#{stockLedgerController.selected.quantity}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="product" value="Product"/>
+                    <h:selectOneMenu id="product"
+                                     value="#{stockLedgerController.selectedProductId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a product" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productController.items}" var="product"
+                                       itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel for="warehouse" value="Warehouse"/>
+                    <h:selectOneMenu id="warehouse"
+                                     value="#{stockLedgerController.selectedWarehouseId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a warehouse" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{warehouseController.items}" var="warehouse"
+                                       itemValue="#{warehouse.id}" itemLabel="#{warehouse.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="Save transaction"
+                                 action="#{stockLedgerController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

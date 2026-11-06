@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Work Order Components | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Work Order Components</h1>
+            <p>Manage required and issued quantities for each work order component.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Component records</h2>
+            <h:form>
+                <h:dataTable value="#{workOrderComponentController.items}" var="item"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{item.id}</h:column>
+                    <h:column><f:facet name="header">Work order</f:facet>#{item.workOrder.workOrderNumber}</h:column>
+                    <h:column><f:facet name="header">Product</f:facet>#{item.componentProduct.name}</h:column>
+                    <h:column><f:facet name="header">Required</f:facet>#{item.quantityRequired}</h:column>
+                    <h:column><f:facet name="header">Issued</f:facet>#{item.quantityIssued}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit"
+                                         action="#{workOrderComponentController.select(item)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete"
+                                         action="#{workOrderComponentController.delete(item)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this work order component?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{workOrderComponentController.editing ? 'Update component' : 'Add component'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="quantityRequired" value="Required quantity"/>
+                    <h:inputText id="quantityRequired"
+                                 value="#{workOrderComponentController.selected.quantityRequired}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="quantityIssued" value="Issued quantity"/>
+                    <h:inputText id="quantityIssued"
+                                 value="#{workOrderComponentController.selected.quantityIssued}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="workOrder" value="Work order"/>
+                    <h:selectOneMenu id="workOrder"
+                                     value="#{workOrderComponentController.selectedWorkOrderId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a work order" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{manufacturingWorkOrderController.items}" var="workOrder"
+                                       itemValue="#{workOrder.id}"
+                                       itemLabel="#{workOrder.workOrderNumber}"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel for="componentProduct" value="Component product"/>
+                    <h:selectOneMenu id="componentProduct"
+                                     value="#{workOrderComponentController.selectedComponentProductId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a product" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productController.items}" var="product"
+                                       itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{workOrderComponentController.editing ? 'Update component' : 'Save component'}"
+                                 action="#{workOrderComponentController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Employees | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Employees</h1>
+            <p>Create, update, and remove employee records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Employee records</h2>
+            <h:form>
+                <h:dataTable value="#{employeeController.items}" var="employee"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{employee.id}</h:column>
+                    <h:column><f:facet name="header">User ID</f:facet>#{employee.userId}</h:column>
+                    <h:column><f:facet name="header">First name</f:facet>#{employee.firstName}</h:column>
+                    <h:column><f:facet name="header">Last name</f:facet>#{employee.lastName}</h:column>
+                    <h:column><f:facet name="header">Hire date</f:facet>#{employee.hireDate}</h:column>
+                    <h:column><f:facet name="header">Salary</f:facet>#{employee.salary}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{employeeController.select(employee)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{employeeController.delete(employee)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this employee?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{employeeController.editing ? 'Update employee' : 'Add employee'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="userId" value="User"/>
+                    <h:selectOneMenu id="userId" value="#{employeeController.selected.userId}" required="true">
+                        <f:selectItem itemLabel="Select a user" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{userController.items}" var="u"
+                                       itemValue="#{u.id}" itemLabel="#{u.username}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="firstName" value="First name"/>
+                    <h:inputText id="firstName" value="#{employeeController.selected.firstName}" required="true"/>
+                    <h:outputLabel for="lastName" value="Last name"/>
+                    <h:inputText id="lastName" value="#{employeeController.selected.lastName}" required="true"/>
+                    <h:outputLabel for="hireDate" value="Hire date"/>
+                    <h:inputText id="hireDate" type="date"
+                                 value="#{employeeController.selected.hireDate}" required="true">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                    <h:outputLabel for="salary" value="Salary"/>
+                    <h:inputText id="salary" value="#{employeeController.selected.salary}" required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                </h:panelGrid>
+                <h:commandButton value="#{employeeController.editing ? 'Update employee' : 'Save employee'}"
+                                 action="#{employeeController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

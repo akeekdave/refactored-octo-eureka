@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.1"
+             xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_1.xsd">
+    <persistence-unit name="smberpPU" transaction-type="JTA">
+        <jta-data-source>jdbc/mySqlDS</jta-data-source>
+
+        <class>in.systemattic.smberp.entity.Company</class>
+        <class>in.systemattic.smberp.entity.Branch</class>
+        <class>in.systemattic.smberp.entity.Department</class>
+        <class>in.systemattic.smberp.entity.Employee</class>
+        <class>in.systemattic.smberp.entity.Attendance</class>
+        <class>in.systemattic.smberp.entity.Payroll</class>
+        <class>in.systemattic.smberp.entity.User</class>
+        <class>in.systemattic.smberp.entity.ProductCategory</class>
+        <class>in.systemattic.smberp.entity.Product</class>
+        <class>in.systemattic.smberp.entity.Warehouse</class>
+        <class>in.systemattic.smberp.entity.BillOfMaterials</class>
+        <class>in.systemattic.smberp.entity.BomItem</class>
+        <class>in.systemattic.smberp.entity.ManufacturingWorkOrder</class>
+        <class>in.systemattic.smberp.entity.WorkOrderComponent</class>
+        <class>in.systemattic.smberp.entity.StockLedger</class>
+
+        <properties>
+            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+        </properties>
+    </persistence-unit>
+</persistence>

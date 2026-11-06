@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Payroll | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Payroll</h1>
+            <p>Create, update, and remove employee payroll records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Payroll records</h2>
+            <h:form>
+                <h:dataTable value="#{payrollController.items}" var="payroll"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{payroll.id}</h:column>
+                    <h:column><f:facet name="header">Employee ID</f:facet>#{payroll.employee.id}</h:column>
+                    <h:column><f:facet name="header">Period start</f:facet>#{payroll.periodStart}</h:column>
+                    <h:column><f:facet name="header">Period end</f:facet>#{payroll.periodEnd}</h:column>
+                    <h:column><f:facet name="header">Gross salary</f:facet>#{payroll.grossSalary}</h:column>
+                    <h:column><f:facet name="header">Net salary</f:facet>#{payroll.netSalary}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{payrollController.select(payroll)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{payrollController.delete(payroll)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this payroll record?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{payrollController.editing ? 'Update payroll' : 'Add payroll'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel value="Select Employee:" for="employeeSelect"/>
+                    <h:selectOneMenu id="employeeSelect"
+                                     value="#{payrollController.selected.employee}"
+                                     converter="employeeConverter" required="true">
+                        <f:selectItem itemLabel="Select an employee" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{employeeController.items}" var="emp"
+                                       itemValue="#{emp}"
+                                       itemLabel="#{emp.firstName} #{emp.lastName}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="periodStart" value="Period start"/>
+                    <h:inputText id="periodStart" type="date"
+                                 value="#{payrollController.selected.periodStart}" required="true">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                    <h:outputLabel for="periodEnd" value="Period end"/>
+                    <h:inputText id="periodEnd" type="date"
+                                 value="#{payrollController.selected.periodEnd}" required="true">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                    <h:outputLabel for="grossSalary" value="Gross salary"/>
+                    <h:inputText id="grossSalary" value="#{payrollController.selected.grossSalary}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                    <h:outputLabel for="netSalary" value="Net salary"/>
+                    <h:inputText id="netSalary" value="#{payrollController.selected.netSalary}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                </h:panelGrid>
+                <h:commandButton value="#{payrollController.editing ? 'Update payroll' : 'Save payroll'}"
+                                 action="#{payrollController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

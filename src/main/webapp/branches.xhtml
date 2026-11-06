@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Branches | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Branches</h1>
+            <p>Create, update, and remove company branches.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Branch records</h2>
+            <h:form>
+                <h:dataTable value="#{branchController.items}" var="branch"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{branch.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{branch.name}</h:column>
+                    <h:column><f:facet name="header">Company</f:facet>#{branch.company.name}</h:column>
+                    <h:column><f:facet name="header">Address</f:facet>#{branch.address}</h:column>
+                    <h:column><f:facet name="header">Phone</f:facet>#{branch.phone}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{branchController.select(branch)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{branchController.delete(branch)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this branch and its departments?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{branchController.editing ? 'Update branch' : 'Add branch'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{branchController.selected.name}" required="true"/>
+                    <h:outputLabel for="company" value="Company"/>
+                    <h:selectOneMenu id="company" value="#{branchController.selectedCompanyId}" required="true">
+                        <f:selectItem itemLabel="Select a company" itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{branchController.companies}" var="company"
+                                       itemValue="#{company.id}" itemLabel="#{company.name}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="address" value="Address"/>
+                    <h:inputText id="address" value="#{branchController.selected.address}"/>
+                    <h:outputLabel for="phone" value="Phone"/>
+                    <h:inputText id="phone" value="#{branchController.selected.phone}"/>
+                </h:panelGrid>
+                <h:commandButton value="#{branchController.editing ? 'Update branch' : 'Save branch'}"
+                                 action="#{branchController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

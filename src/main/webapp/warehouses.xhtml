@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Warehouses | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Warehouses</h1>
+            <p>Create, update, and remove warehouse records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Warehouse records</h2>
+            <h:form>
+                <h:dataTable value="#{warehouseController.items}" var="warehouse"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{warehouse.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{warehouse.name}</h:column>
+                    <h:column><f:facet name="header">Location</f:facet>#{warehouse.location}</h:column>
+                    <h:column><f:facet name="header">Branch</f:facet>#{warehouse.branch.name}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{warehouseController.select(warehouse)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{warehouseController.delete(warehouse)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this warehouse?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{warehouseController.editing ? 'Update warehouse' : 'Add warehouse'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{warehouseController.selected.name}" required="true"/>
+                    <h:outputLabel for="location" value="Location"/>
+                    <h:inputText id="location" value="#{warehouseController.selected.location}"
+                                 required="true"/>
+                    <h:outputLabel for="branch" value="Branch"/>
+                    <h:selectOneMenu id="branch" value="#{warehouseController.selectedBranchId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a branch" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{warehouseController.branches}" var="branch"
+                                       itemValue="#{branch.id}" itemLabel="#{branch.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{warehouseController.editing ? 'Update warehouse' : 'Save warehouse'}"
+                                 action="#{warehouseController.save}" styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

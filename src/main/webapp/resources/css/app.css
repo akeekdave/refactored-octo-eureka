@@ -1,0 +1,151 @@
+:root {
+    color-scheme: light;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: #172033;
+    background: #f3f6fb;
+}
+
+body {
+    margin: 0;
+}
+
+.container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+    margin: 0.35rem 0;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.page-header p,
+.eyebrow {
+    color: #5b667a;
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.back-link {
+    color: #3157b7;
+    text-decoration: none;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.card,
+.panel {
+    border: 1px solid #e0e6f0;
+    border-radius: 0.8rem;
+    background: #fff;
+    box-shadow: 0 0.3rem 1rem rgb(28 43 75 / 5%);
+}
+
+.card {
+    display: flex;
+    min-height: 120px;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.25rem;
+    color: #5b667a;
+    text-decoration: none;
+}
+
+.card:hover {
+    border-color: #9eb4ed;
+    transform: translateY(-2px);
+}
+
+.card-title {
+    color: #172033;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.panel {
+    margin: 1.25rem 0;
+    padding: 1.25rem;
+    overflow-x: auto;
+}
+
+.panel h2 {
+    margin-top: 0;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e7ebf2;
+}
+
+.data-table th {
+    color: #5b667a;
+    font-size: 0.85rem;
+}
+
+.form-grid {
+    margin-bottom: 1rem;
+}
+
+.form-grid td {
+    padding: 0.4rem 1rem 0.4rem 0;
+}
+
+input,
+select {
+    box-sizing: border-box;
+    min-width: 15rem;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid #cbd3e1;
+    border-radius: 0.35rem;
+    font: inherit;
+}
+
+.button {
+    margin: 0.15rem;
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    border-radius: 0.35rem;
+    font: inherit;
+    cursor: pointer;
+}
+
+.button-primary {
+    background: #3157b7;
+    color: white;
+}
+
+.button-secondary {
+    background: #e8eefc;
+    color: #24489f;
+}
+
+.button-danger {
+    background: #fde9e8;
+    color: #a52e28;
+}
+
+.messages {
+    color: #a52e28;
+}

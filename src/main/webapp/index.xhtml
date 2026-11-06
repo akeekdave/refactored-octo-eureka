@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>SMB ERP | Dashboard</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <p class="eyebrow">Systemattic SMB ERP</p>
+            <h1>Management dashboard</h1>
+            <p>Choose an area to manage your organization.</p>
+        </header>
+        <nav class="cards" aria-label="Entity management">
+            <h:link outcome="companies" styleClass="card">
+                <span class="card-title">Companies</span>
+                <span>Manage company details and tax information.</span>
+            </h:link>
+            <h:link outcome="branches" styleClass="card">
+                <span class="card-title">Branches</span>
+                <span>Manage branches and their parent companies.</span>
+            </h:link>
+            <h:link outcome="departments" styleClass="card">
+                <span class="card-title">Departments</span>
+                <span>Manage departments and their parent branches.</span>
+            </h:link>
+            <h:link outcome="employees" styleClass="card">
+                <span class="card-title">Manage Employees</span>
+                <span>Manage employee details and department assignments.</span>
+            </h:link>
+            <h:link outcome="attendance" styleClass="card">
+                <span class="card-title">Track Attendance</span>
+                <span>Record employee work dates and check-in times.</span>
+            </h:link>
+            <h:link outcome="payroll" styleClass="card">
+                <span class="card-title">Manage Payroll</span>
+                <span>Manage employee payroll periods and salary amounts.</span>
+            </h:link>
+            <h:link outcome="categories" styleClass="card">
+                <span class="card-title">Manage Categories</span>
+                <span>Organize products by category.</span>
+            </h:link>
+            <h:link outcome="products" styleClass="card">
+                <span class="card-title">Manage Products</span>
+                <span>Manage product details, pricing, and categories.</span>
+            </h:link>
+            <h:link outcome="warehouses" styleClass="card">
+                <span class="card-title">Manage Warehouses</span>
+                <span>Manage warehouse locations and branch assignments.</span>
+            </h:link>
+            <h:link outcome="boms" styleClass="card">
+                <span class="card-title">Manage BOMs</span>
+                <span>Manage bills of materials for finished products.</span>
+            </h:link>
+            <h:link outcome="bomItems" styleClass="card">
+                <span class="card-title">Manage BOM Items</span>
+                <span>Manage component quantities for each bill of materials.</span>
+            </h:link>
+            <h:link outcome="workOrders" styleClass="card">
+                <span class="card-title">Manage Work Orders</span>
+                <span>Plan and track manufacturing work orders.</span>
+            </h:link>
+            <h:link outcome="workOrderComponents" styleClass="card">
+                <span class="card-title">Manage Work Order Components</span>
+                <span>Track component requirements and issued quantities.</span>
+            </h:link>
+            <h:link outcome="stockLedger" styleClass="card">
+                <span class="card-title">Stock Ledger Transactions</span>
+                <span>Record inventory movements and review stock transactions.</span>
+            </h:link>
+        </nav>
+    </main>
+</h:body>
+</html>

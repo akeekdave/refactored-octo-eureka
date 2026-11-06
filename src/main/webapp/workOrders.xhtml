@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Work Orders | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Manufacturing Work Orders</h1>
+            <p>Create, update, and track production work orders.</p>
+        </header>
+        <section class="panel">
+            <h2>Work order records</h2>
+            <h:form>
+                <h:messages globalOnly="true" style="color:red; margin:10px 0;"/>
+                <h:dataTable value="#{manufacturingWorkOrderController.items}" var="item"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{item.id}</h:column>
+                    <h:column><f:facet name="header">Work order</f:facet>#{item.workOrderNumber}</h:column>
+                    <h:column><f:facet name="header">BOM</f:facet>#{item.bom.name}</h:column>
+                    <h:column><f:facet name="header">Warehouse</f:facet>#{item.warehouse.name}</h:column>
+                    <h:column><f:facet name="header">Target</f:facet>#{item.quantityTarget}</h:column>
+                    <h:column><f:facet name="header">Produced</f:facet>#{item.quantityProduced}</h:column>
+                    <h:column><f:facet name="header">Status</f:facet>#{item.status}</h:column>
+                    <h:column><f:facet name="header">Start date</f:facet>#{item.startDate}</h:column>
+                    <h:column><f:facet name="header">End date</f:facet>#{item.endDate}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit"
+                                         action="#{manufacturingWorkOrderController.select(item)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete"
+                                         action="#{manufacturingWorkOrderController.delete(item)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this work order and its components?');"/>
+                        <h:commandButton value="Start"
+                                         action="#{manufacturingWorkOrderController.startProduction(item)}"
+                                         rendered="#{item.status == 'PLANNED'}"
+                                         styleClass="button button-primary"/>
+                        <h:commandButton value="Complete"
+                                         action="#{manufacturingWorkOrderController.completeProduction(item)}"
+                                         rendered="#{item.status == 'IN_PROGRESS'}"
+                                         styleClass="button button-primary"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{manufacturingWorkOrderController.editing ? 'Update work order' : 'Add work order'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="quantityTarget" value="Target quantity"/>
+                    <h:inputText id="quantityTarget"
+                                 value="#{manufacturingWorkOrderController.selected.quantityTarget}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="quantityProduced" value="Produced quantity"/>
+                    <h:inputText id="quantityProduced"
+                                 value="#{manufacturingWorkOrderController.selected.quantityProduced}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="status" value="Status"/>
+                    <h:inputText id="status"
+                                 value="#{manufacturingWorkOrderController.selected.status}"
+                                 maxlength="30" required="true"/>
+
+                    <h:outputLabel for="startDate" value="Start date"/>
+                    <h:inputText id="startDate" type="date"
+                                 value="#{manufacturingWorkOrderController.selected.startDate}">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="endDate" value="End date"/>
+                    <h:inputText id="endDate" type="date"
+                                 value="#{manufacturingWorkOrderController.selected.endDate}">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+
+                    <h:outputLabel for="bom" value="Bill of materials"/>
+                    <h:selectOneMenu id="bom"
+                                     value="#{manufacturingWorkOrderController.selectedBomId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a bill of materials" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{billOfMaterialsController.items}" var="bom"
+                                       itemValue="#{bom.id}" itemLabel="#{bom.name} (#{bom.version})"/>
+                    </h:selectOneMenu>
+
+                    <h:outputLabel for="warehouse" value="Warehouse"/>
+                    <h:selectOneMenu id="warehouse"
+                                     value="#{manufacturingWorkOrderController.selectedWarehouseId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a warehouse" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{warehouseController.items}" var="warehouse"
+                                       itemValue="#{warehouse.id}" itemLabel="#{warehouse.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{manufacturingWorkOrderController.editing ? 'Update work order' : 'Save work order'}"
+                                 action="#{manufacturingWorkOrderController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

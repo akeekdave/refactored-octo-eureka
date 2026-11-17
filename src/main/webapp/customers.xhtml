@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Customers | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Customers</h1>
+            <p>Create, update, and remove customer records.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Customer records</h2>
+            <h:form>
+                <h:dataTable value="#{customerController.items}" var="customer"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{customer.id}</h:column>
+                    <h:column><f:facet name="header">Name</f:facet>#{customer.name}</h:column>
+                    <h:column><f:facet name="header">Email</f:facet>#{customer.email}</h:column>
+                    <h:column><f:facet name="header">Phone</f:facet>#{customer.phone}</h:column>
+                    <h:column><f:facet name="header">Address</f:facet>#{customer.address}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit" action="#{customerController.select(customer)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete" action="#{customerController.delete(customer)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this customer?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{customerController.editing ? 'Update customer' : 'Add customer'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="name" value="Name"/>
+                    <h:inputText id="name" value="#{customerController.selected.name}"
+                                 required="true" maxlength="100"/>
+                    <h:outputLabel for="email" value="Email"/>
+                    <h:inputText id="email" value="#{customerController.selected.email}"
+                                 required="true" maxlength="100"/>
+                    <h:outputLabel for="phone" value="Phone"/>
+                    <h:inputText id="phone" value="#{customerController.selected.phone}"
+                                 required="true" maxlength="50"/>
+                    <h:outputLabel for="address" value="Address"/>
+                    <h:inputText id="address" value="#{customerController.selected.address}"
+                                 required="true" maxlength="255"/>
+                </h:panelGrid>
+                <h:commandButton value="#{customerController.editing ? 'Update customer' : 'Save customer'}"
+                                 action="#{customerController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

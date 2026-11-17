@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Sales Order Items | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Sales Order Items</h1>
+            <p>Manage products and quantities on sales orders.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Sales item records</h2>
+            <h:form>
+                <h:dataTable value="#{salesOrderItemController.items}" var="item"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{item.id}</h:column>
+                    <h:column><f:facet name="header">Sales order</f:facet>#{item.salesOrder.id}</h:column>
+                    <h:column><f:facet name="header">Product</f:facet>#{item.product.name}</h:column>
+                    <h:column><f:facet name="header">Quantity</f:facet>#{item.quantity}</h:column>
+                    <h:column><f:facet name="header">Unit price</f:facet>#{item.unitPrice}</h:column>
+                    <h:column><f:facet name="header">Discount</f:facet>#{item.discount}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit"
+                                         action="#{salesOrderItemController.select(item)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete"
+                                         action="#{salesOrderItemController.delete(item)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this sales order item?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{salesOrderItemController.editing ? 'Update sales item' : 'Add sales item'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="quantity" value="Quantity"/>
+                    <h:inputText id="quantity" value="#{salesOrderItemController.selected.quantity}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="4"/>
+                    </h:inputText>
+                    <h:outputLabel for="unitPrice" value="Unit price"/>
+                    <h:inputText id="unitPrice" value="#{salesOrderItemController.selected.unitPrice}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                    <h:outputLabel for="discount" value="Discount"/>
+                    <h:inputText id="discount" value="#{salesOrderItemController.selected.discount}"
+                                 required="true">
+                        <f:convertNumber type="number" maxFractionDigits="2"/>
+                    </h:inputText>
+                    <h:outputLabel for="salesOrder" value="Sales order"/>
+                    <h:selectOneMenu id="salesOrder"
+                                     value="#{salesOrderItemController.selectedSalesOrderId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a sales order" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{salesOrderController.items}" var="salesOrder"
+                                       itemValue="#{salesOrder.id}"
+                                       itemLabel="#{salesOrder.id}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="product" value="Product"/>
+                    <h:selectOneMenu id="product"
+                                     value="#{salesOrderItemController.selectedProductId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a product" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{productController.items}" var="product"
+                                       itemValue="#{product.id}" itemLabel="#{product.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{salesOrderItemController.editing ? 'Update sales item' : 'Save sales item'}"
+                                 action="#{salesOrderItemController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>

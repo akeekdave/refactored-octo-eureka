@@ -21,6 +21,9 @@
         <class>in.systemattic.smberp.entity.ManufacturingWorkOrder</class>
         <class>in.systemattic.smberp.entity.WorkOrderComponent</class>
         <class>in.systemattic.smberp.entity.StockLedger</class>
+        <class>in.systemattic.smberp.entity.Customer</class>
+        <class>in.systemattic.smberp.entity.SalesOrder</class>
+        <class>in.systemattic.smberp.entity.SalesOrderItem</class>
 
         <properties>
             <property name="eclipselink.target-database" value="MySQL"/>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Sales Orders | SMB ERP</title>
+    <h:outputStylesheet name="css/app.css"/>
+</h:head>
+<h:body>
+    <main class="container">
+        <header class="page-header">
+            <h:link outcome="index" styleClass="back-link">Back to dashboard</h:link>
+            <h1>Sales Orders</h1>
+            <p>Create and track customer sales orders.</p>
+        </header>
+        <h:messages styleClass="messages"/>
+        <section class="panel">
+            <h2>Sales order records</h2>
+            <h:form>
+                <h:dataTable value="#{salesOrderController.items}" var="salesOrder"
+                             styleClass="data-table" rowClasses="table-row">
+                    <h:column><f:facet name="header">ID</f:facet>#{salesOrder.id}</h:column>
+                    <h:column><f:facet name="header">Customer</f:facet>#{salesOrder.customer.name}</h:column>
+                    <h:column><f:facet name="header">Branch</f:facet>#{salesOrder.branch.name}</h:column>
+                    <h:column><f:facet name="header">Order date</f:facet>#{salesOrder.orderDate}</h:column>
+                    <h:column><f:facet name="header">Total</f:facet>#{salesOrder.totalAmount}</h:column>
+                    <h:column><f:facet name="header">Status</f:facet>#{salesOrder.status}</h:column>
+                    <h:column>
+                        <f:facet name="header">Actions</f:facet>
+                        <h:commandButton value="Edit"
+                                         action="#{salesOrderController.select(salesOrder)}"
+                                         styleClass="button button-secondary"/>
+                        <h:commandButton value="Delete"
+                                         action="#{salesOrderController.delete(salesOrder)}"
+                                         styleClass="button button-danger"
+                                         onclick="return confirm('Delete this sales order and its items?');"/>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </section>
+        <section class="panel">
+            <h2>#{salesOrderController.editing ? 'Update sales order' : 'Add sales order'}</h2>
+            <h:form>
+                <h:panelGrid columns="2" styleClass="form-grid">
+                    <h:outputLabel for="orderDate" value="Order date"/>
+                    <h:inputText id="orderDate" type="date"
+                                 value="#{salesOrderController.selected.orderDate}"
+                                 required="true">
+                        <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                    </h:inputText>
+                    <h:outputLabel for="status" value="Status"/>
+                    <h:selectOneMenu id="status"
+                                     value="#{salesOrderController.selected.status}"
+                                     required="true">
+                        <f:selectItem itemValue="DRAFT" itemLabel="DRAFT"/>
+                        <f:selectItem itemValue="CONFIRMED" itemLabel="CONFIRMED"/>
+                        <f:selectItem itemValue="SHIPPED" itemLabel="SHIPPED"/>
+                        <f:selectItem itemValue="CANCELLED" itemLabel="CANCELLED"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="customer" value="Customer"/>
+                    <h:selectOneMenu id="customer"
+                                     value="#{salesOrderController.selectedCustomerId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a customer" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{customerController.items}" var="customer"
+                                       itemValue="#{customer.id}" itemLabel="#{customer.name}"/>
+                    </h:selectOneMenu>
+                    <h:outputLabel for="branch" value="Branch"/>
+                    <h:selectOneMenu id="branch"
+                                     value="#{salesOrderController.selectedBranchId}"
+                                     required="true">
+                        <f:selectItem itemLabel="Select a branch" itemValue="#{null}"
+                                      noSelectionOption="true"/>
+                        <f:selectItems value="#{salesOrderController.branches}" var="branch"
+                                       itemValue="#{branch.id}" itemLabel="#{branch.name}"/>
+                    </h:selectOneMenu>
+                </h:panelGrid>
+                <h:commandButton value="#{salesOrderController.editing ? 'Update sales order' : 'Save sales order'}"
+                                 action="#{salesOrderController.save}"
+                                 styleClass="button button-primary"/>
+            </h:form>
+        </section>
+    </main>
+</h:body>
+</html>
